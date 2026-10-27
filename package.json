@@ -52,12 +52,12 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/meloncholera/tree-sitter-scss-modern.git"
+    "url": "git+https://github.com/alfpricot/tree-sitter-scss-modern.git"
   },
   "bugs": {
-    "url": "https://github.com/meloncholera/tree-sitter-scss-modern/issues"
+    "url": "https://github.com/alfpricot/tree-sitter-scss-modern/issues"
   },
-  "homepage": "https://github.com/meloncholera/tree-sitter-scss-modern#readme",
+  "homepage": "https://github.com/alfpricot/tree-sitter-scss-modern#readme",
   "keywords": [
     "parser",
     "tree-sitter",
