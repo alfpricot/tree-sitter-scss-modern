@@ -43,7 +43,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  TREE_SITTER_CLI_VERSION: '0.27.0'
+  TREE_SITTER_CLI_VERSION: '0.27.1'
 
 jobs:
   pr-title:
