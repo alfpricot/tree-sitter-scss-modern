@@ -12,7 +12,7 @@ A tree-sitter grammar for current SCSS syntax, with Rust and Node.js bindings.
 ```sh
 npm install --ignore-scripts
 npm rebuild tree-sitter-cli
-npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter generate
+npx --yes --package=tree-sitter-cli@0.27.1 -- tree-sitter generate
 cargo build
 ```
 
@@ -26,13 +26,13 @@ installed GCC-compatible toolchain (for example `CC=gcc CXX=g++`).
 The `Verify` workflow runs these checks:
 
 ```sh
-npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter generate
+npx --yes --package=tree-sitter-cli@0.27.1 -- tree-sitter generate
 node test/generate-node-kinds.mjs
 npm run lint
 npm run format:check
 node --test tools/*.test.mjs
-npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter test
-npx --yes --package=tree-sitter-cli@0.27.0 -- tree-sitter parse examples/*.scss
+npx --yes --package=tree-sitter-cli@0.27.1 -- tree-sitter test
+npx --yes --package=tree-sitter-cli@0.27.1 -- tree-sitter parse examples/*.scss
 cargo fmt --check
 cargo clippy --all-targets -- -D warnings
 cargo test
