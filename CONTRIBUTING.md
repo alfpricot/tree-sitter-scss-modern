@@ -4,7 +4,7 @@ A tree-sitter grammar for current SCSS syntax, with Rust and Node.js bindings.
 
 ## Before you start
 
-1. Branch from **`dev`**. `main` is the production branch; a release pull request promotes `dev` into it.
+1. Branch from **`dev`**. `main` is the production branch; a promotion pull request from `dev` into it cuts the release.
 2. Read [ARCHITECTURE.md](ARCHITECTURE.md) for what each directory holds.
 
 ## Local setup
@@ -56,4 +56,4 @@ CI also validates the pull request title, scans for secrets, and lints the workf
 - Open pull requests against **`dev`**.
 - Use a Conventional Commit title (`feat:`, `fix:`, `docs:`, `chore:`, `test:`, ...).
 - Keep each pull request to one change, and link the issue it resolves in the body.
-- Release-plz computes versions and `CHANGELOG.md` from commit messages, so do not edit either by hand.
+- gala computes versions and `CHANGELOG.md` from commit messages when a promotion reaches `main`, so do not edit either by hand.

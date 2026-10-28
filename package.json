@@ -9,9 +9,9 @@
     "prestart": "npx --yes --package=tree-sitter-cli@0.27.1 -- tree-sitter build --wasm",
     "start": "npx --yes --package=tree-sitter-cli@0.27.1 -- tree-sitter playground",
     "test": "node --test bindings/node/*_test.js",
-    "lint": "eslint grammar.js \"test/*.mjs\" \"bindings/node/*.js\"",
-    "format": "prettier --write grammar.js \"test/*.mjs\" \"tools/*.mjs\" \"bindings/node/*.js\"",
-    "format:check": "prettier --check grammar.js \"test/*.mjs\" \"tools/*.mjs\" \"bindings/node/*.js\""
+    "lint": "oxlint grammar.js test tools bindings/node",
+    "format": "oxfmt grammar.js \"test/*.mjs\" \"tools/*.mjs\" \"bindings/node/*.js\"",
+    "format:check": "oxfmt --check grammar.js \"test/*.mjs\" \"tools/*.mjs\" \"bindings/node/*.js\""
   },
   "author": "M. Reifschneider",
   "contributors": [
@@ -23,10 +23,9 @@
     "node-gyp-build": "4.8.4"
   },
   "devDependencies": {
-    "@eslint/js": "10.0.1",
-    "eslint": "10.13.0",
     "node-gyp": "13.1.0",
-    "prettier": "3.9.10",
+    "oxfmt": "0.74.0",
+    "oxlint": "1.89.0",
     "tree-sitter": "0.25.1",
     "tree-sitter-cli": "0.27.1",
     "tree-sitter-css": "0.20.0"
@@ -38,12 +37,6 @@
     "tree-sitter": {
       "optional": true
     }
-  },
-  "prettier": {
-    "tabWidth": 2,
-    "singleQuote": true,
-    "trailingComma": "all",
-    "printWidth": 100
   },
   "gypfile": true,
   "directories": {

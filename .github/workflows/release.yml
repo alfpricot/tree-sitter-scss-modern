@@ -28,10 +28,11 @@
 #                      an older tag re-dispatched by hand can predate them).
 #
 #                      The workflow_dispatch trigger exists because
-#                      release-tag.yml pushes the tag using GITHUB_TOKEN, and
-#                      GitHub never fires further workflow runs off a
-#                      GITHUB_TOKEN-authored push; release-tag.yml dispatches
-#                      this workflow with the tag it just pushed instead.
+#                      gala-release.yml's release commit carries a skip-ci
+#                      marker, which GitHub also applies to the tag push, so
+#                      the `push: tags` trigger does not fire for a gala
+#                      release; gala-release.yml dispatches this workflow
+#                      with the tag it just pushed instead.
 #
 #                      Package versions (package.json, tree-sitter.json) are
 #                      set from the tag at publish time in the working tree
