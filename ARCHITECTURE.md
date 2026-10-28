@@ -80,12 +80,12 @@ package, then the parser and external scanner produce a syntax tree, then the co
   and format-checks the JavaScript, runs the corpus tests, parses every example, builds and tests the Rust
   and Node.js bindings, checks the packed package contents, validates the pull request title, scans for
   secrets, and lints workflow files. An aggregate job reports one `Verify` status for branch rules.
-- **`release-plz.yml`** runs on pushes to `main` and opens a release pull request with the next version and
-  `CHANGELOG.md`, computed from Conventional Commits.
-- **`release-tag.yml`** tags the version when that release pull request merges and starts the release.
+- **`gala-release.yml`** runs on pushes to `main`. gala (configured in `.gala.toml`) computes the next
+  version from Conventional Commits, bumps `Cargo.toml`, writes `CHANGELOG.md`, commits, tags, pushes over a
+  deploy key, and fast-forwards `dev` to the release commit; the workflow then dispatches `release.yml` for
+  the new tag.
 - **`release.yml`** publishes the crate and both npm packages for a `v*` tag, attaches the WebAssembly
   build, and creates the GitHub Release.
-- **`sync-dev-from-main.yml`** opens a pull request that merges `main` back into `dev` after a release.
 - **`cache-cleanup.yml`** deletes stale GitHub Actions caches daily.
 
 Feature work lands on `dev`; `main` is the release branch. Nothing is deployed beyond the registries above.
@@ -103,4 +103,4 @@ Feature work lands on `dev`; `main` is the release branch. Nothing is deployed b
 | `tools/` | Release policy and package-content scripts |
 | `examples/` | Stylesheets CI must parse without errors |
 | `.github/workflows/` | Verify, release, and maintenance workflows |
-| `release-plz.toml` | Release-plz settings |
+| `.gala.toml` | gala release settings |

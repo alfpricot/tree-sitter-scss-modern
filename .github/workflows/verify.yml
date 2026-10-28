@@ -19,11 +19,9 @@
 #                      every check up into a single `Verify` status for
 #                      branch rulesets to require.
 #
-#                      workflow_dispatch exists because release-plz.yml and
-#                      sync-dev-from-main.yml push their PR branches with
-#                      GITHUB_TOKEN, which never triggers a pull_request
-#                      run; they dispatch this workflow on that branch so
-#                      the head commit still gets a `Verify` status.
+#                      workflow_dispatch lets a branch that no pull_request
+#                      run covers (a branch pushed with GITHUB_TOKEN never
+#                      triggers one) still get a `Verify` status by hand.
 # =============================================================================
 
 name: Verify
@@ -153,14 +151,9 @@ jobs:
         # A bare `npm install` here would also run this package's own
         # "install": "node-gyp-build" lifecycle script and fail without
         # MSVC; --ignore-scripts installs the declared devDependencies
-        # (tree-sitter-css, eslint, @eslint/js, prettier) without running
-        # any of them. grammar.js imports the base grammar from
-        # tree-sitter-css in node_modules, so this must run before
-        # `tree-sitter generate`.
-        # ESLint's flat config resolves its own imports (@eslint/js) from
-        # this checkout's node_modules, so this step is required — an
-        # npx --package= invocation installs into a separate temporary
-        # cache the config file's own import can't see.
+        # (tree-sitter-css, oxlint, oxfmt) without running any of them.
+        # grammar.js imports the base grammar from tree-sitter-css in
+        # node_modules, so this must run before `tree-sitter generate`.
         run: |
           npm install --ignore-scripts
           # --ignore-scripts skips the CLI's binary download; fetch it so
@@ -359,8 +352,8 @@ jobs:
           PYEOF
 
   ci:
-    # A dispatched run must report as `Verify` too: it is how a
-    # GITHUB_TOKEN-pushed release or sync branch satisfies the required check.
+    # A dispatched run must report as `Verify` too: it is how a branch pushed
+    # with GITHUB_TOKEN satisfies the required check.
     name: ${{ github.event_name == 'push' && 'Verify (push)' || 'Verify' }}
     needs: [verify, node-binding, secret-scanning, pr-title, workflow-meta]
     if: always()

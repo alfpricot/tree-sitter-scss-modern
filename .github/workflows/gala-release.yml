@@ -1,0 +1,116 @@
+# =============================================================================
+#  tree-sitter-scss-modern · GitHub Actions
+# -----------------------------------------------------------------------------
+#  File                gala-release.yml
+#  Workflow name       Gala release
+#  Type                Entrypoint (runs in this repo only)
+#  Triggers            push (main branch)
+#                      workflow_dispatch
+#  Purpose             A promotion that lands on main cuts the release with
+#                      gala (configured in .gala.toml): it reads the
+#                      Conventional Commits since the latest v* tag, bumps
+#                      the Cargo.toml version, writes the CHANGELOG.md
+#                      entry, commits, tags, pushes the commit and tag
+#                      together, and fast-forwards dev to the release commit.
+#                      When no commit since the last tag is releasable, gala
+#                      exits without changing anything and this workflow
+#                      stops there.
+#
+#                      The pushes go over the RELEASE_DEPLOY_KEY deploy key:
+#                      this repo's rulesets block direct pushes to main and
+#                      dev and creating v* tags, and on a personal-account
+#                      repository a deploy key is the bypass actor available
+#                      to a workflow. The key needs write access and a
+#                      ruleset bypass entry.
+#
+#                      gala's release commit carries a skip-ci marker so it
+#                      does not re-run this workflow, and GitHub applies the
+#                      same marker to the tag push (the tag points at that
+#                      commit), so release.yml's `push: tags` trigger does
+#                      not fire. After gala finishes, this workflow therefore
+#                      dispatches release.yml for the new tag itself, on the
+#                      tag ref so the publish run keeps its npm provenance
+#                      attestation. release.yml creates the GitHub Release,
+#                      so githubRelease is off in .gala.toml.
+#
+#                      gala only bumps Cargo.toml. package.json and
+#                      tree-sitter.json keep their committed version, and
+#                      release.yml sets both from the tag at publish time in
+#                      its working tree only.
+# =============================================================================
+
+name: Gala release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: gala-release
+  cancel-in-progress: false
+
+env:
+  GALA_VERSION: 'v0.2.0'
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      # The git pushes authenticate with the deploy key; contents: write
+      # covers gala's GitHub API calls and actions: write lets the dispatch
+      # step start release.yml.
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout (gala reads tags and history)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          # origin becomes an SSH remote authenticated by the deploy key, so
+          # gala's atomic push and dev sync use the ruleset bypass.
+          ssh-key: ${{ secrets.RELEASE_DEPLOY_KEY }}
+      - name: Configure git identity
+        # gala makes the release commit with the runner's git; without an
+        # identity git refuses to commit at all.
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: '1.27.3'
+      - name: Install Rust toolchain
+        # gala's cargo manager runs cargo to write the version and refresh
+        # the lockfile.
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # v1.97.0
+      - name: Install gala
+        run: |
+          go install "github.com/alfpricot/gala/cmd/gala@${GALA_VERSION}"
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+      - name: Release
+        id: release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          before=$(git rev-parse HEAD)
+          gala release
+          # A release adds one commit on top of HEAD; no new commit means
+          # nothing was due.
+          if [ "$(git rev-parse HEAD)" = "$before" ]; then
+            echo "tag=" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=$(git describe --tags --abbrev=0 --match 'v[0-9]*' HEAD)" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Dispatch the publish workflow for the new tag
+        if: steps.release.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: gh workflow run release.yml --ref "$TAG" -f "tag=${TAG}"
