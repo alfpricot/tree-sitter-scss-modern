@@ -89,6 +89,30 @@ a:hover {}
     (block)))
 
 =========================
+Interpolated pseudo-class selectors before a brace
+=========================
+
+.a:#{$state}{}
+.b:hover-#{$x}#{$y}{}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors (pseudo_class_selector
+      (class_selector (class_name))
+      (class_name (interpolation (variable)))))
+    (block))
+  (rule_set
+    (selectors (pseudo_class_selector
+      (class_selector (class_name))
+      (class_name
+        (identifier)
+        (interpolation (variable))
+        (interpolation (variable)))))
+    (block)))
+
+=========================
 Pseudo-element selectors
 =========================
 

@@ -130,17 +130,18 @@ bool tree_sitter_scss_external_scanner_scan(void *payload, TSLexer *lexer, const
             }
             lexer->mark_end(lexer);
             // We need a { to be a pseudo class selector, a ; indicates a property. A { that opens
-            // an interpolation (#{...}) is part of a value and is skipped.
+            // an interpolation (#{...}) is part of a value and is skipped; the character after the
+            // interpolation is checked too, so `.a:#{$state}{` still opens a block.
             int32_t previous = ':';
             while (lexer->lookahead != ';' && lexer->lookahead != '}' && !lexer->eof(lexer)) {
                 previous = lexer->lookahead;
                 advance(lexer);
-                if (lexer->lookahead == '{') {
-                    if (previous != '#') {
-                        lexer->result_symbol = PSEUDO_CLASS_SELECTOR_COLON;
-                        return true;
-                    }
+                if (lexer->lookahead == '{' && previous == '#') {
                     skip_interpolation(lexer);
+                }
+                if (lexer->lookahead == '{') {
+                    lexer->result_symbol = PSEUDO_CLASS_SELECTOR_COLON;
+                    return true;
                 }
             }
             return false;
