@@ -52,9 +52,9 @@ stylesheets and reports files whose tree contains an error.
 
 ### [tools/](tools)
 
-Scripts the release workflow runs: `release-policy.mjs` validates that a tag matches the `Cargo.toml`
-version and sets package versions at publish time, and `package-check.mjs` checks the contents of the
-packed packages. `release-policy.test.mjs` tests the policy script.
+Scripts the release workflow runs: `release-policy.mjs` validates that a tag matches the version in
+`Cargo.toml`, `package.json`, and `tree-sitter.json`, and `package-check.mjs` checks the contents of
+the packed packages. `release-policy.test.mjs` tests the policy script.
 
 ### [examples/](examples)
 
@@ -81,9 +81,10 @@ package, then the parser and external scanner produce a syntax tree, then the co
   and Node.js bindings, checks the packed package contents, validates the pull request title, scans for
   secrets, and lints workflow files. An aggregate job reports one `Verify` status for branch rules.
 - **`gala-release.yml`** runs on pushes to `main`. gala (configured in `.gala.toml`) computes the next
-  version from Conventional Commits, bumps `Cargo.toml`, writes `CHANGELOG.md`, commits, tags, pushes over a
-  deploy key, and fast-forwards `dev` to the release commit; the workflow then dispatches `release.yml` for
-  the new tag.
+  version from Conventional Commits, bumps it in `Cargo.toml`, `package.json`, and `tree-sitter.json`,
+  refreshes `package-lock.json`, regenerates the parser (whose metadata embeds the `tree-sitter.json`
+  version), writes `CHANGELOG.md`, commits, tags, pushes over a deploy key, and fast-forwards `dev` to
+  the release commit; the workflow then dispatches `release.yml` for the new tag.
 - **`release.yml`** publishes the crate and both npm packages for a `v*` tag, attaches the WebAssembly
   build, and creates the GitHub Release.
 - **`cache-cleanup.yml`** deletes stale GitHub Actions caches daily.
