@@ -9,6 +9,10 @@
 
 import CSS from 'tree-sitter-css/grammar.js';
 
+// A variable, optionally qualified by a module namespace such as `my-lib.$gutter`.
+const VARIABLE =
+  /([a-zA-Z_\u0080-\uFFFF][a-zA-Z0-9_\u0080-\uFFFF-]*\.)?\$[a-zA-Z_\u0080-\uFFFF-][a-zA-Z0-9_\u0080-\uFFFF-]*/;
+
 export default grammar(CSS, {
   name: 'scss',
 
@@ -31,6 +35,7 @@ export default grammar(CSS, {
         $.debug_statement,
         $.at_root_statement,
         $.container_statement,
+        $.scope_statement,
         $.if_statement,
         $.each_statement,
         $.for_statement,
@@ -51,6 +56,7 @@ export default grammar(CSS, {
         $.debug_statement,
         $.at_root_statement,
         $.container_statement,
+        $.scope_statement,
         $.if_statement,
         $.each_statement,
         $.for_statement,
@@ -270,6 +276,13 @@ export default grammar(CSS, {
         ';',
       ),
 
+    scope_statement: ($) =>
+      seq(
+        '@scope',
+        optional(seq('(', $._selector, ')', optional(seq('to', '(', $._selector, ')')))),
+        $.block,
+      ),
+
     error_statement: ($) => seq('@error', $._value, ';'),
 
     warn_statement: ($) => seq('@warn', $._value, ';'),
@@ -287,7 +300,9 @@ export default grammar(CSS, {
         optional($.else_clause),
       ),
 
-    else_if_clause: ($) => seq('@else', 'if', field('condition', $._value), $.block),
+    // `@elseif` is the legacy single-word spelling that Sass still accepts with a deprecation warning.
+    else_if_clause: ($) =>
+      seq(choice(seq('@else', 'if'), '@elseif'), field('condition', $._value), $.block),
 
     else_clause: ($) => seq('@else', $.block),
 
@@ -333,7 +348,7 @@ export default grammar(CSS, {
     // subtraction, relational, equality, `and`, and `or`.
     binary_expression: ($) =>
       choice(
-        prec.left(7, seq($._value, choice('*', '/'), $._value)),
+        prec.left(7, seq($._value, choice('*', '/', '%'), $._value)),
         prec.left(6, seq($._value, choice('+', '-'), $._value)),
         prec.left(5, seq($._value, choice('<', '>', '<=', '>='), $._value)),
         prec.left(4, seq($._value, choice('==', '!='), $._value)),
@@ -341,7 +356,24 @@ export default grammar(CSS, {
         prec.left(2, seq($._value, 'or', $._value)),
       ),
 
-    unary_expression: ($) => prec(8, seq('not', $._value)),
+    // `not` negates any value. A sign applies only to a variable or interpolation written directly
+    // against it (`-$gutter`, `-#{$x}`), so `$a - $b` stays a binary expression.
+    unary_expression: ($) =>
+      choice(
+        prec(8, seq('not', $._value)),
+        prec(
+          8,
+          seq(
+            choice('-', '+'),
+            choice(
+              alias(token.immediate(VARIABLE), $.variable),
+              alias($._immediate_interpolation, $.interpolation),
+            ),
+          ),
+        ),
+      ),
+
+    _immediate_interpolation: ($) => seq(alias(token.immediate('#{'), '#{'), $._value, '}'),
 
     // `@content ($args...)` passes a spread through the base rule for a parenthesized value.
     parenthesized_value: ($) => seq('(', $._value, optional('...'), ')'),
@@ -349,6 +381,12 @@ export default grammar(CSS, {
     list_value: ($) => seq('(', sep2(',', $._value), ')'),
 
     interpolation: ($) => seq('#{', $._value, '}'),
+
+    // `%` after a number is the percent unit (`5%`), not the modulo operator.
+    unit: (_) => choice(token.immediate(prec(1, '%')), token.immediate(/[a-zA-Z%]+/)),
+
+    // Non-ASCII characters are valid in a name, as in `.café` and `$größe`.
+    identifier: (_) => /(--|-?[a-zA-Z_\u0080-\uFFFF])[a-zA-Z0-9_\u0080-\uFFFF-]*/,
 
     placeholder: ($) => seq('%', $.identifier),
 
@@ -374,7 +412,8 @@ export default grammar(CSS, {
         ),
       ),
 
-    variable: (_) => /([a-zA-Z_]+\.)?\$[a-zA-Z-_][a-zA-Z0-9-_]*/,
+    // Higher lexical precedence than `plain_value`, which also matches `ns.$name`.
+    variable: (_) => token(prec(2, VARIABLE)),
   },
 });
 

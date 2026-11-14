@@ -1,0 +1,65 @@
+# =============================================================================
+#  tree-sitter-scss-modern · GitHub Actions
+# -----------------------------------------------------------------------------
+#  File                fuzz.yml
+#  Workflow name       Fuzz
+#  Type                Entrypoint (runs in this repo only)
+#  Triggers            schedule (weekly)
+#                      workflow_dispatch
+#  Purpose             Fuzzes the generated parser and its external scanner
+#                      with tree-sitter's built-in corpus mutator: every
+#                      corpus case is edited at random and reparsed, and the
+#                      incremental result must match a fresh parse. The
+#                      scanner's hand-written lookahead loops are the part
+#                      most likely to misbehave on malformed input, so this
+#                      runs on a schedule instead of on every pull request.
+# =============================================================================
+
+name: Fuzz
+
+on:
+  schedule:
+    - cron: '30 5 * * 1'
+  workflow_dispatch:
+    inputs:
+      iterations:
+        description: Fuzzing iterations per corpus case
+        type: string
+        default: '2000'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fuzz
+  cancel-in-progress: false
+
+env:
+  TREE_SITTER_CLI_VERSION: '0.27.1'
+
+jobs:
+  fuzz:
+    name: Fuzz the parser and scanner
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.x'
+
+      - name: Install devDependencies
+        # grammar.js imports the base grammar from tree-sitter-css in
+        # node_modules; --ignore-scripts skips this package's own native
+        # build, which fuzzing does not need.
+        run: |
+          npm install --ignore-scripts
+          npm rebuild tree-sitter-cli
+
+      - name: Fuzz every corpus case
+        env:
+          ITERATIONS: ${{ inputs.iterations || '2000' }}
+        run: npx --yes --package=tree-sitter-cli@${{ env.TREE_SITTER_CLI_VERSION }} -- tree-sitter fuzz --iterations "$ITERATIONS" --edits 5

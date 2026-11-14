@@ -1,0 +1,147 @@
+==============================
+Unary minus on a variable
+==============================
+
+a {
+  margin: -$gutter;
+  padding: +$gutter;
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (tag_name))
+    (block
+      (declaration
+        (property_name)
+        (unary_expression
+          (variable)))
+      (declaration
+        (property_name)
+        (unary_expression
+          (variable))))))
+
+==============================
+Unary minus on an interpolation
+==============================
+
+a {
+  top: -#{$y};
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (tag_name))
+    (block
+      (declaration
+        (property_name)
+        (unary_expression
+          (interpolation
+            (variable)))))))
+
+==============================
+Binary minus with spaces stays binary
+==============================
+
+a {
+  width: $a - $b;
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (tag_name))
+    (block
+      (declaration
+        (property_name)
+        (binary_expression
+          (variable)
+          (variable))))))
+
+==============================
+Modulo operator
+==============================
+
+@if $i % 2 == 0 {
+  a {
+    b: c;
+  }
+}
+
+---
+
+(stylesheet
+  (if_statement
+    condition: (binary_expression
+      (binary_expression
+        (variable)
+        (integer_value))
+      (integer_value))
+    (block
+      (rule_set
+        (selectors
+          (tag_name))
+        (block
+          (declaration
+            (property_name)
+            (plain_value)))))))
+
+==============================
+Placeholder is not a modulo operator
+==============================
+
+a {
+  @extend %foo;
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (tag_name))
+    (block
+      (extend_statement
+        (placeholder
+          (identifier))))))
+
+==============================
+Namespaced variables and functions
+==============================
+
+a {
+  b: my-lib.$x;
+  c: v2.$y;
+  d: m.$z;
+  e: my-lib.fn(1);
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (tag_name))
+    (block
+      (declaration
+        (property_name)
+        (variable))
+      (declaration
+        (property_name)
+        (variable))
+      (declaration
+        (property_name)
+        (variable))
+      (declaration
+        (property_name)
+        (call_expression
+          (function_name)
+          (arguments
+            (integer_value)))))))
