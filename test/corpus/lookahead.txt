@@ -1,0 +1,191 @@
+==============================
+Brace inside a string after a colon is a declaration
+==============================
+
+.a{content:"{";}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (class_selector
+        (class_name)))
+    (block
+      (declaration
+        (property_name)
+        (string_value)))))
+
+==============================
+Brace inside a string inside an interpolation
+==============================
+
+.a {
+  b: #{"}"};
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (class_selector
+        (class_name)))
+    (block
+      (declaration
+        (property_name)
+        (interpolation
+          (string_value))))))
+
+==============================
+Semicolon inside a comment after a pseudo class
+==============================
+
+a:hover /* ; */ {
+  b: c;
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (pseudo_class_selector
+        (tag_name)
+        (class_name)))
+    (comment)
+    (block
+      (declaration
+        (property_name)
+        (plain_value)))))
+
+==============================
+Semicolon inside a line comment after a pseudo class
+==============================
+
+a:hover // ;
+{
+  b: c;
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (pseudo_class_selector
+        (tag_name)
+        (class_name)))
+    (js_comment)
+    (block
+      (declaration
+        (property_name)
+        (plain_value)))))
+
+==============================
+Slashes in an unquoted url are not a line comment
+==============================
+
+.a {
+  b:url(http://example.com/x.png);
+  c: d;
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (class_selector
+        (class_name)))
+    (block
+      (declaration
+        (property_name)
+        (call_expression
+          (function_name)
+          (arguments
+            (plain_value))))
+      (declaration
+        (property_name)
+        (plain_value)))))
+
+==============================
+Interpolated pseudo class before a brace after a string
+==============================
+
+.a {
+  &:#{"x"}{
+    b: c;
+  }
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (class_selector
+        (class_name)))
+    (block
+      (rule_set
+        (selectors
+          (pseudo_class_selector
+            (nesting_selector)
+            (class_name
+              (interpolation
+                (string_value)))))
+        (block
+          (declaration
+            (property_name)
+            (plain_value)))))))
+
+==============================
+Non-ASCII class names and variables
+==============================
+
+.café:hover {
+  $größe: 1px;
+  width: $größe;
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (pseudo_class_selector
+        (class_selector
+          (class_name))
+        (class_name)))
+    (block
+      (declaration
+        (property_name)
+        (integer_value
+          (unit)))
+      (declaration
+        (property_name)
+        (variable)))))
+
+==============================
+Underscore after an interpolation continues the name
+==============================
+
+.a#{$x}_e {
+  b: c;
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (class_selector
+        (class_name
+          (identifier)
+          (interpolation
+            (variable))
+          (identifier))))
+    (block
+      (declaration
+        (property_name)
+        (plain_value)))))

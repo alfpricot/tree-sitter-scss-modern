@@ -10,7 +10,8 @@
 import CSS from 'tree-sitter-css/grammar.js';
 
 // A variable, optionally qualified by a module namespace such as `my-lib.$gutter`.
-const VARIABLE = /([a-zA-Z_][a-zA-Z0-9_-]*\.)?\$[a-zA-Z_-][a-zA-Z0-9_-]*/;
+const VARIABLE =
+  /([a-zA-Z_\u0080-\uFFFF][a-zA-Z0-9_\u0080-\uFFFF-]*\.)?\$[a-zA-Z_\u0080-\uFFFF-][a-zA-Z0-9_\u0080-\uFFFF-]*/;
 
 export default grammar(CSS, {
   name: 'scss',
@@ -372,6 +373,9 @@ export default grammar(CSS, {
 
     // `%` after a number is the percent unit (`5%`), not the modulo operator.
     unit: (_) => choice(token.immediate(prec(1, '%')), token.immediate(/[a-zA-Z%]+/)),
+
+    // Non-ASCII characters are valid in a name, as in `.café` and `$größe`.
+    identifier: (_) => /(--|-?[a-zA-Z_\u0080-\uFFFF])[a-zA-Z0-9_\u0080-\uFFFF-]*/,
 
     placeholder: ($) => seq('%', $.identifier),
 
