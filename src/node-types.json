@@ -888,6 +888,10 @@
           "named": true
         },
         {
+          "type": "scope_statement",
+          "named": true
+        },
+        {
           "type": "supports_statement",
           "named": true
         },
@@ -4024,6 +4028,81 @@
     }
   },
   {
+    "type": "scope_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "adjacent_sibling_selector",
+          "named": true
+        },
+        {
+          "type": "attribute_selector",
+          "named": true
+        },
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "child_selector",
+          "named": true
+        },
+        {
+          "type": "class_selector",
+          "named": true
+        },
+        {
+          "type": "descendant_selector",
+          "named": true
+        },
+        {
+          "type": "id_selector",
+          "named": true
+        },
+        {
+          "type": "namespace_selector",
+          "named": true
+        },
+        {
+          "type": "nesting_selector",
+          "named": true
+        },
+        {
+          "type": "placeholder",
+          "named": true
+        },
+        {
+          "type": "pseudo_class_selector",
+          "named": true
+        },
+        {
+          "type": "pseudo_element_selector",
+          "named": true
+        },
+        {
+          "type": "sibling_selector",
+          "named": true
+        },
+        {
+          "type": "string_value",
+          "named": true
+        },
+        {
+          "type": "tag_name",
+          "named": true
+        },
+        {
+          "type": "universal_selector",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "selector_query",
     "named": true,
     "fields": {},
@@ -4355,6 +4434,10 @@
         },
         {
           "type": "rule_set",
+          "named": true
+        },
+        {
+          "type": "scope_statement",
           "named": true
         },
         {
@@ -4984,6 +5067,10 @@
     "named": false
   },
   {
+    "type": "@elseif",
+    "named": false
+  },
+  {
     "type": "@error",
     "named": false
   },
@@ -5033,6 +5120,10 @@
   },
   {
     "type": "@return",
+    "named": false
+  },
+  {
+    "type": "@scope",
     "named": false
   },
   {

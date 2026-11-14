@@ -35,6 +35,7 @@ export default grammar(CSS, {
         $.debug_statement,
         $.at_root_statement,
         $.container_statement,
+        $.scope_statement,
         $.if_statement,
         $.each_statement,
         $.for_statement,
@@ -55,6 +56,7 @@ export default grammar(CSS, {
         $.debug_statement,
         $.at_root_statement,
         $.container_statement,
+        $.scope_statement,
         $.if_statement,
         $.each_statement,
         $.for_statement,
@@ -274,6 +276,13 @@ export default grammar(CSS, {
         ';',
       ),
 
+    scope_statement: ($) =>
+      seq(
+        '@scope',
+        optional(seq('(', $._selector, ')', optional(seq('to', '(', $._selector, ')')))),
+        $.block,
+      ),
+
     error_statement: ($) => seq('@error', $._value, ';'),
 
     warn_statement: ($) => seq('@warn', $._value, ';'),
@@ -291,7 +300,9 @@ export default grammar(CSS, {
         optional($.else_clause),
       ),
 
-    else_if_clause: ($) => seq('@else', 'if', field('condition', $._value), $.block),
+    // `@elseif` is the legacy single-word spelling that Sass still accepts with a deprecation warning.
+    else_if_clause: ($) =>
+      seq(choice(seq('@else', 'if'), '@elseif'), field('condition', $._value), $.block),
 
     else_clause: ($) => seq('@else', $.block),
 

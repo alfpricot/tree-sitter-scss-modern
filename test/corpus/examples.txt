@@ -1,5 +1,5 @@
 =========================
-Universal selectors
+Imports, nesting and extend
 =========================
 
 @import './styles/reset.scss';

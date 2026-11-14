@@ -1,0 +1,30 @@
+@if $a > 1 {
+// <- keyword.conditional
+  b { c: d; }
+} @else if $a < 2 {
+//^ keyword.conditional
+//      ^ keyword.conditional
+  b { c: e; }
+} @elseif $a < 3 {
+//^ keyword.conditional
+  b { c: f; }
+} @else {
+//^ keyword.conditional
+  b { c: g; }
+}
+
+@scope (.card) {
+// <- keyword
+  img { margin: 0; }
+  // <- tag
+  //    ^ property
+  //            ^ number
+}
+
+a {
+  content: "x";
+  //       ^ string
+  width: 10px;
+  //     ^ number
+  //       ^ type
+}
