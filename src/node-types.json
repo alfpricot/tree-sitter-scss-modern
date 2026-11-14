@@ -4570,6 +4570,11 @@
     }
   },
   {
+    "type": "unit",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "universal_selector",
     "named": true,
     "fields": {}
@@ -5171,10 +5176,6 @@
   {
     "type": "to",
     "named": false
-  },
-  {
-    "type": "unit",
-    "named": true
   },
   {
     "type": "using",

@@ -322,7 +322,7 @@ Use statements
     (block
       (declaration
         (property_name)
-        (plain_value))
+        (variable))
       (declaration
         (property_name)
         (plain_value)))))
