@@ -189,3 +189,48 @@ Underscore after an interpolation continues the name
       (declaration
         (property_name)
         (plain_value)))))
+
+==============================
+Descendant combinator before a pseudo-element
+==============================
+
+.a ::before {
+  content: "x";
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (descendant_selector
+        (class_selector
+          (class_name))
+        (pseudo_element_selector
+          (tag_name))))
+    (block
+      (declaration
+        (property_name)
+        (string_value)))))
+
+==============================
+Descendant combinator before a non-ASCII type selector
+==============================
+
+.a é {
+  b: c;
+}
+
+---
+
+(stylesheet
+  (rule_set
+    (selectors
+      (descendant_selector
+        (class_selector
+          (class_name))
+        (tag_name)))
+    (block
+      (declaration
+        (property_name)
+        (plain_value)))))

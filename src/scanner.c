@@ -202,13 +202,15 @@ bool tree_sitter_scss_external_scanner_scan(void *payload, TSLexer *lexer, const
         lexer->mark_end(lexer);
 
         if (lexer->lookahead == '#' || lexer->lookahead == '.' || lexer->lookahead == '[' || lexer->lookahead == '-' ||
-            lexer->lookahead == '*' || lexer->lookahead == '&' || iswalnum(lexer->lookahead)) {
+            lexer->lookahead == '*' || lexer->lookahead == '&' || is_name_char(lexer->lookahead)) {
             return true;
         }
 
         if (lexer->lookahead == ':') {
             advance(lexer);
-            if (iswspace(lexer->lookahead) || !can_follow_pseudo_class_colon(lexer->lookahead)) {
+            // A second colon starts a pseudo-element (`.a ::before`), which is also a selector.
+            if (iswspace(lexer->lookahead) ||
+                (lexer->lookahead != ':' && !can_follow_pseudo_class_colon(lexer->lookahead))) {
                 return false;
             }
             return reaches_block_before_end(lexer);
