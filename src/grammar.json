@@ -108,6 +108,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "scope_statement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "if_statement"
         },
         {
@@ -682,6 +686,10 @@
         {
           "type": "SYMBOL",
           "name": "container_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "scope_statement"
         },
         {
           "type": "SYMBOL",
@@ -3650,6 +3658,73 @@
         }
       ]
     },
+    "scope_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "@scope"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "("
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_selector"
+                },
+                {
+                  "type": "STRING",
+                  "value": ")"
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": "to"
+                        },
+                        {
+                          "type": "STRING",
+                          "value": "("
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "_selector"
+                        },
+                        {
+                          "type": "STRING",
+                          "value": ")"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "block"
+        }
+      ]
+    },
     "error_statement": {
       "type": "SEQ",
       "members": [
@@ -3779,12 +3854,26 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "@else"
-        },
-        {
-          "type": "STRING",
-          "value": "if"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "@else"
+                },
+                {
+                  "type": "STRING",
+                  "value": "if"
+                }
+              ]
+            },
+            {
+              "type": "STRING",
+              "value": "@elseif"
+            }
+          ]
         },
         {
           "type": "FIELD",
