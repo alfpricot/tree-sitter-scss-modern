@@ -403,7 +403,8 @@ Probe: debug
 
 (stylesheet
   (debug_statement
-    (string_value)))
+    (string_value
+      (string_content))))
 
 ==============================
 Probe: line comments
@@ -441,11 +442,13 @@ Probe: use with an alias
 
 (stylesheet
   (use_statement
-    (string_value)
+    (string_value
+      (string_content))
     (as_clause
       (namespace_name)))
   (use_statement
-    (string_value)
+    (string_value
+      (string_content))
     (as_clause)))
 
 ==============================
@@ -458,7 +461,8 @@ Probe: use with configuration
 
 (stylesheet
   (use_statement
-    (string_value)
+    (string_value
+      (string_content))
     (with_clause
       (map_value
         (map_pair
@@ -479,7 +483,8 @@ Probe: use with alias and configuration
 
 (stylesheet
   (use_statement
-    (string_value)
+    (string_value
+      (string_content))
     (as_clause
       (namespace_name))
     (with_clause
@@ -499,12 +504,14 @@ Probe: forward with show and hide
 
 (stylesheet
   (forward_statement
-    (string_value)
+    (string_value
+      (string_content))
     (hide_clause
       (identifier)
       (variable)))
   (forward_statement
-    (string_value)
+    (string_value
+      (string_content))
     (show_clause
       (identifier)
       (variable))))
@@ -520,11 +527,13 @@ Probe: forward with a prefix
 
 (stylesheet
   (forward_statement
-    (string_value)
+    (string_value
+      (string_content))
     (as_clause
       (namespace_name)))
   (forward_statement
-    (string_value)
+    (string_value
+      (string_content))
     (as_clause
       (namespace_name))
     (show_clause
@@ -638,7 +647,8 @@ $config: (
                 key: (plain_value)
                 value: (color_value))))))
       (map_pair
-        key: (string_value)
+        key: (string_value
+          (string_content))
         value: (integer_value))
       (map_pair
         key: (variable)
@@ -697,7 +707,6 @@ a {
         (list_value
           (plain_value)
           (plain_value))))))
-
 
 ==============================
 Probe: not in an if condition
@@ -1207,7 +1216,6 @@ a {
       (include_statement
         (identifier)))))
 
-
 ==============================
 Probe: call with a spread argument
 ==============================
@@ -1300,7 +1308,6 @@ a:not(.b) {
       (declaration
         (property_name)
         (plain_value)))))
-
 
 ==============================
 Probe: media range query
@@ -2032,12 +2039,17 @@ Probe: import several files
 
 (stylesheet
   (import_statement
-    (string_value)
-    (string_value))
+    (string_value
+      (string_content))
+    (string_value
+      (string_content)))
   (import_statement
-    (string_value)
-    (string_value)
-    (string_value))
+    (string_value
+      (string_content))
+    (string_value
+      (string_content))
+    (string_value
+      (string_content)))
   (import_statement
     (call_expression
       (function_name)
@@ -2080,7 +2092,6 @@ a {
         (identifier)
         (arguments)))))
 
-
 ==============================
 Probe: flag inside a forward configuration
 ==============================
@@ -2091,7 +2102,8 @@ Probe: flag inside a forward configuration
 
 (stylesheet
   (forward_statement
-    (string_value)
+    (string_value
+      (string_content))
     (with_clause
       (map_value
         (map_pair
@@ -2125,4 +2137,3 @@ Probe: content with a spread
         (at_keyword)
         (parenthesized_value
           (variable))))))
-
