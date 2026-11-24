@@ -59,7 +59,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  TREE_SITTER_CLI_VERSION: '0.27.1'
+  TREE_SITTER_CLI_VERSION: '0.27.2'
   PREBUILDIFY_VERSION: '6.0.1'
 
 permissions:

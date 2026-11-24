@@ -7,7 +7,10 @@ Universal selectors
 ---
 
 (stylesheet
-  (rule_set (selectors (universal_selector)) (block)))
+  (rule_set
+    (selectors
+      (universal_selector))
+    (block)))
 
 =========================
 Type selectors
@@ -19,8 +22,18 @@ h1, h2, h3, h4 {}
 ---
 
 (stylesheet
-  (rule_set (selectors (tag_name) (tag_name)) (block))
-  (rule_set (selectors (tag_name) (tag_name) (tag_name) (tag_name)) (block)))
+  (rule_set
+    (selectors
+      (tag_name)
+      (tag_name))
+    (block))
+  (rule_set
+    (selectors
+      (tag_name)
+      (tag_name)
+      (tag_name)
+      (tag_name))
+    (block)))
 
 =========================
 Class selectors
@@ -33,12 +46,19 @@ div.class-b, .class-c.class-d {}
 
 (stylesheet
   (rule_set
-    (selectors (class_selector (class_name)))
+    (selectors
+      (class_selector
+        (class_name)))
     (block))
   (rule_set
     (selectors
-      (class_selector (tag_name) (class_name))
-      (class_selector (class_selector (class_name)) (class_name)))
+      (class_selector
+        (tag_name)
+        (class_name))
+      (class_selector
+        (class_selector
+          (class_name))
+        (class_name)))
     (block)))
 
 =========================
@@ -51,7 +71,12 @@ Id selectors
 
 (stylesheet
   (rule_set
-    (selectors (id_selector (id_name)) (id_selector (tag_name) (id_name)))
+    (selectors
+      (id_selector
+        (id_name))
+      (id_selector
+        (tag_name)
+        (id_name)))
     (block)))
 
 =========================
@@ -66,10 +91,29 @@ a[b] {}
 ---
 
 (stylesheet
-  (rule_set (selectors (attribute_selector (attribute_name))) (block))
-  (rule_set (selectors (attribute_selector (attribute_name) (plain_value))) (block))
-  (rule_set (selectors (attribute_selector (attribute_name) (plain_value))) (block))
-  (rule_set (selectors (attribute_selector (tag_name) (attribute_name))) (block)))
+  (rule_set
+    (selectors
+      (attribute_selector
+        (attribute_name)))
+    (block))
+  (rule_set
+    (selectors
+      (attribute_selector
+        (attribute_name)
+        (plain_value)))
+    (block))
+  (rule_set
+    (selectors
+      (attribute_selector
+        (attribute_name)
+        (plain_value)))
+    (block))
+  (rule_set
+    (selectors
+      (attribute_selector
+        (tag_name)
+        (attribute_name)))
+    (block)))
 
 =========================
 Pseudo-class selectors
@@ -82,10 +126,17 @@ a:hover {}
 
 (stylesheet
   (rule_set
-    (selectors (pseudo_class_selector (tag_name) (class_name)))
+    (selectors
+      (pseudo_class_selector
+        (tag_name)
+        (class_name)))
     (block))
   (rule_set
-    (selectors (pseudo_class_selector (class_name) (arguments (integer_value))))
+    (selectors
+      (pseudo_class_selector
+        (class_name)
+        (arguments
+          (integer_value))))
     (block)))
 
 =========================
@@ -99,17 +150,25 @@ Interpolated pseudo-class selectors before a brace
 
 (stylesheet
   (rule_set
-    (selectors (pseudo_class_selector
-      (class_selector (class_name))
-      (class_name (interpolation (variable)))))
+    (selectors
+      (pseudo_class_selector
+        (class_selector
+          (class_name))
+        (class_name
+          (interpolation
+            (variable)))))
     (block))
   (rule_set
-    (selectors (pseudo_class_selector
-      (class_selector (class_name))
-      (class_name
-        (identifier)
-        (interpolation (variable))
-        (interpolation (variable)))))
+    (selectors
+      (pseudo_class_selector
+        (class_selector
+          (class_name))
+        (class_name
+          (identifier)
+          (interpolation
+            (variable))
+          (interpolation
+            (variable)))))
     (block)))
 
 =========================
@@ -122,7 +181,10 @@ a::first-line {}
 
 (stylesheet
   (rule_set
-    (selectors (pseudo_element_selector (tag_name) (tag_name)))
+    (selectors
+      (pseudo_element_selector
+        (tag_name)
+        (tag_name)))
     (block)))
 
 =========================
@@ -136,12 +198,18 @@ c > d > e {}
 
 (stylesheet
   (rule_set
-    (selectors (child_selector (tag_name) (tag_name)))
+    (selectors
+      (child_selector
+        (tag_name)
+        (tag_name)))
     (block))
   (rule_set
-    (selectors (child_selector
-      (child_selector (tag_name) (tag_name))
-      (tag_name)))
+    (selectors
+      (child_selector
+        (child_selector
+          (tag_name)
+          (tag_name))
+        (tag_name)))
     (block)))
 
 =========================
@@ -155,12 +223,18 @@ c d e {}
 
 (stylesheet
   (rule_set
-    (selectors (descendant_selector (tag_name) (tag_name)))
+    (selectors
+      (descendant_selector
+        (tag_name)
+        (tag_name)))
     (block))
   (rule_set
-    (selectors (descendant_selector
-      (descendant_selector (tag_name) (tag_name))
-      (tag_name)))
+    (selectors
+      (descendant_selector
+        (descendant_selector
+          (tag_name)
+          (tag_name))
+        (tag_name)))
     (block)))
 
 ===========================
@@ -178,12 +252,33 @@ a {
 
 (stylesheet
   (rule_set
-    (selectors (tag_name))
+    (selectors
+      (tag_name))
     (block
-      (rule_set (selectors (class_selector (nesting_selector) (class_name))) (block))
-      (rule_set (selectors (descendant_selector (nesting_selector) (tag_name))) (block))
-      (rule_set (selectors (child_selector (nesting_selector) (tag_name))) (block))
-      (rule_set (selectors (class_selector (nesting_selector) (class_name))) (block)))))
+      (rule_set
+        (selectors
+          (class_selector
+            (nesting_selector)
+            (class_name)))
+        (block))
+      (rule_set
+        (selectors
+          (descendant_selector
+            (nesting_selector)
+            (tag_name)))
+        (block))
+      (rule_set
+        (selectors
+          (child_selector
+            (nesting_selector)
+            (tag_name)))
+        (block))
+      (rule_set
+        (selectors
+          (class_selector
+            (nesting_selector)
+            (class_name)))
+        (block)))))
 
 ===========================
 Sibling selectors
@@ -196,14 +291,26 @@ a.b ~ c.d {}
 
 (stylesheet
   (rule_set
-    (selectors (sibling_selector
-      (class_selector (tag_name) (class_name))
-      (class_selector (tag_name) (class_name))))
+    (selectors
+      (sibling_selector
+        (class_selector
+          (tag_name)
+          (class_name))
+        (class_selector
+          (tag_name)
+          (class_name))))
     (block))
   (rule_set
-    (selectors (adjacent_sibling_selector
-      (class_selector (class_selector (class_name)) (class_name))
-      (class_selector (class_selector (class_name)) (class_name))))
+    (selectors
+      (adjacent_sibling_selector
+        (class_selector
+          (class_selector
+            (class_name))
+          (class_name))
+        (class_selector
+          (class_selector
+            (class_name))
+          (class_name))))
     (block)))
 
 ===========================
@@ -217,16 +324,25 @@ a:not(:hover) {}
 
 (stylesheet
   (rule_set
-    (selectors (pseudo_class_selector
-      (tag_name)
-      (class_name)
-      (arguments (pseudo_class_selector (class_name)))))
+    (selectors
+      (pseudo_class_selector
+        (tag_name)
+        (class_name)
+        (arguments
+          (pseudo_class_selector
+            (class_name)))))
     (block))
   (rule_set
-    (selectors (pseudo_class_selector
-      (class_selector (class_name))
-      (class_name)
-      (arguments (child_selector (tag_name) (class_selector (class_name))))))
+    (selectors
+      (pseudo_class_selector
+        (class_selector
+          (class_name))
+        (class_name)
+        (arguments
+          (child_selector
+            (tag_name)
+            (class_selector
+              (class_name))))))
     (block)))
 
 ===========================
@@ -241,8 +357,13 @@ html {
 
 (stylesheet
   (rule_set
-    (selectors (tag_name))
+    (selectors
+      (tag_name))
     (block
-    (rule_set
-      (selectors (descendant_selector (class_selector (class_name)) (nesting_selector)))
-      (block)))))
+      (rule_set
+        (selectors
+          (descendant_selector
+            (class_selector
+              (class_name))
+            (nesting_selector)))
+        (block)))))

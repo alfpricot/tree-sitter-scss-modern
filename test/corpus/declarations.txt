@@ -233,7 +233,10 @@ a {
         (string_value))
       (declaration
         (property_name)
-        (string_value)))))
+        (string_value
+          (escape_sequence)
+          (string_content)
+          (escape_sequence))))))
 
 ============================
 URLs

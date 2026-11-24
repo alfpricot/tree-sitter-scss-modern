@@ -26,6 +26,7 @@ each_statement{key,value}
 else_clause
 else_if_clause{condition}
 error_statement
+escape_sequence
 extend_statement
 feature_name
 feature_query
@@ -44,6 +45,7 @@ identifier
 if_statement{condition}
 import_statement
 important
+important_value
 include_statement
 integer_value
 interpolation
@@ -82,6 +84,7 @@ selector_query
 selectors
 show_clause
 sibling_selector
+string_content
 string_value
 stylesheet
 supports_statement

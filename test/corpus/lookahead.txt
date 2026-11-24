@@ -14,7 +14,8 @@ Brace inside a string after a colon is a declaration
     (block
       (declaration
         (property_name)
-        (string_value)))))
+        (string_value
+          (string_content))))))
 
 ==============================
 Brace inside a string inside an interpolation
@@ -35,7 +36,8 @@ Brace inside a string inside an interpolation
       (declaration
         (property_name)
         (interpolation
-          (string_value))))))
+          (string_value
+            (string_content)))))))
 
 ==============================
 Semicolon inside a comment after a pseudo class
@@ -133,7 +135,8 @@ Interpolated pseudo class before a brace after a string
             (nesting_selector)
             (class_name
               (interpolation
-                (string_value)))))
+                (string_value
+                  (string_content))))))
         (block
           (declaration
             (property_name)
@@ -211,7 +214,8 @@ Descendant combinator before a pseudo-element
     (block
       (declaration
         (property_name)
-        (string_value)))))
+        (string_value
+          (string_content))))))
 
 ==============================
 Descendant combinator before a non-ASCII type selector
